@@ -11,7 +11,7 @@ export async function signInWithOtp(email: string) {
         email,
         options: {
             shouldCreateUser: true,
-            emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL ? 'http://localhost:3000' : 'http://localhost:3000'}/auth/callback`,
+            emailRedirectTo: 'https://lms-production-7a65.up.railway.app/auth/callback',
         },
     });
 
