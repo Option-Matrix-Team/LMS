@@ -2,8 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import getSupabaseAdmin from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 
+// Use Railway URL for production, fallback to origin for local dev
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lms-production-7a65.up.railway.app';
+
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url)
+    const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
     const token_hash = searchParams.get('token_hash')
     const type = searchParams.get('type')
@@ -16,7 +19,7 @@ export async function GET(request: Request) {
         if (!error && data.user) {
             // Ensure profile exists
             await ensureProfileExists(data.user.id, data.user.email!)
-            return NextResponse.redirect(`${origin}/dashboard`)
+            return NextResponse.redirect(`${SITE_URL}/dashboard`)
         }
     }
 
@@ -30,7 +33,7 @@ export async function GET(request: Request) {
         if (!error && data.user) {
             // Ensure profile exists
             await ensureProfileExists(data.user.id, data.user.email!)
-            return NextResponse.redirect(`${origin}/dashboard`)
+            return NextResponse.redirect(`${SITE_URL}/dashboard`)
         }
     }
 
@@ -38,11 +41,11 @@ export async function GET(request: Request) {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
         await ensureProfileExists(user.id, user.email!)
-        return NextResponse.redirect(`${origin}/dashboard`)
+        return NextResponse.redirect(`${SITE_URL}/dashboard`)
     }
 
     // Redirect to login on error
-    return NextResponse.redirect(`${origin}/login?error=auth_callback_error`)
+    return NextResponse.redirect(`${SITE_URL}/login?error=auth_callback_error`)
 }
 
 async function ensureProfileExists(userId: string, email: string) {
