@@ -6,21 +6,30 @@ import { redirect } from 'next/navigation';
 
 export async function signInWithOtp(email: string) {
     const supabase = await createClient();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lms-production-7a65.up.railway.app';
 
+    // shouldCreateUser: false - Only existing users can login
+    // New users must be created by system operators
     const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-            shouldCreateUser: true,
-            emailRedirectTo: 'https://lms-production-7a65.up.railway.app/auth/callback',
+            shouldCreateUser: false,
+            emailRedirectTo: `${siteUrl}/auth/callback`,
         },
     });
 
     if (error) {
         console.error('SignInWithOtp error:', error);
+        
+        // Provide user-friendly error for unregistered users
+        if (error.message.includes('Signups not allowed') || error.message.includes('User not found')) {
+            return { error: 'This email is not registered. Please contact your administrator to get access.' };
+        }
+        
         return { error: error.message };
     }
 
-    return { success: true, message: 'Check your email for the login link' };
+    return { success: true, message: 'Check your email for the login code' };
 }
 
 export async function verifyOtp(email: string, token: string) {

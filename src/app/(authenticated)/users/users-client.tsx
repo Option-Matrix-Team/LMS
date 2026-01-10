@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
     Dialog,
@@ -20,9 +21,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { toast } from '@/components/ui/sonner';
-import { updateUserRole, removeUserFromLibrary } from '@/lib/actions/users';
+import { updateUserRole, removeUserFromLibrary, createUser, deleteUser } from '@/lib/actions/users';
 import { Profile, Library } from '@/lib/types';
-import { Users, Edit, X } from 'lucide-react';
+import { Users, Edit, X, Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface UsersClientProps {
@@ -36,6 +37,13 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
     const [selectedRole, setSelectedRole] = useState<string>('');
     const [selectedLibraryId, setSelectedLibraryId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
+    
+    // Add User state
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [newUserEmail, setNewUserEmail] = useState('');
+    const [newUserName, setNewUserName] = useState('');
+    const [newUserRole, setNewUserRole] = useState<'librarian' | 'library_admin' | 'system_operator'>('librarian');
+    const [newUserLibraryId, setNewUserLibraryId] = useState('');
 
     const handleEditUser = (user: Profile) => {
         setEditingUser(user);
@@ -60,6 +68,46 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
             toast.error(error.message || 'Failed to update user');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleAddUser = async () => {
+        if (!newUserEmail || !newUserName) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await createUser({
+                email: newUserEmail,
+                name: newUserName,
+                role: newUserRole,
+                libraryId: newUserLibraryId || undefined,
+            });
+            toast.success('User created successfully! They can now login with their email.');
+            setIsAddDialogOpen(false);
+            setNewUserEmail('');
+            setNewUserName('');
+            setNewUserRole('librarian');
+            setNewUserLibraryId('');
+            window.location.reload();
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to create user');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteUser = async (userId: string, email: string) => {
+        if (!confirm(`Are you sure you want to delete user ${email}? This cannot be undone.`)) return;
+
+        try {
+            await deleteUser(userId);
+            toast.success('User deleted successfully');
+            window.location.reload();
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to delete user');
         }
     };
 
@@ -88,16 +136,26 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold">User Management</h1>
-                <p className="text-muted-foreground">Manage all users across libraries</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold">User Management</h1>
+                    <p className="text-muted-foreground">Manage all users across libraries</p>
+                </div>
+                <Button onClick={() => setIsAddDialogOpen(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add User
+                </Button>
             </div>
 
             {users.length === 0 ? (
                 <div className="text-center py-12">
                     <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-lg font-medium">No users yet</h3>
-                    <p className="text-muted-foreground">Users appear here when they sign up</p>
+                    <p className="text-muted-foreground mb-4">Create your first user to get started</p>
+                    <Button onClick={() => setIsAddDialogOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add User
+                    </Button>
                 </div>
             ) : (
                 <Table>
@@ -108,7 +166,7 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
                             <TableHead>Role</TableHead>
                             <TableHead>Library</TableHead>
                             <TableHead>Joined</TableHead>
-                            <TableHead className="w-[100px]">Actions</TableHead>
+                            <TableHead className="w-[120px]">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -142,12 +200,21 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
                                                 variant="ghost"
                                                 size="icon-sm"
                                                 onClick={() => handleRemoveFromLibrary(user.id)}
-                                                className="text-destructive hover:text-destructive"
+                                                className="text-orange-600 hover:text-orange-600"
                                                 title="Remove from library"
                                             >
                                                 <X className="h-4 w-4" />
                                             </Button>
                                         )}
+                                        <Button
+                                            variant="ghost"
+                                            size="icon-sm"
+                                            onClick={() => handleDeleteUser(user.id, user.email)}
+                                            className="text-destructive hover:text-destructive"
+                                            title="Delete user"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -155,6 +222,79 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
                     </TableBody>
                 </Table>
             )}
+
+            {/* Add User Dialog */}
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription>
+                            Create a new user who can login to the system
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="email">Email *</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="user@example.com"
+                                value={newUserEmail}
+                                onChange={(e) => setNewUserEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">Name *</Label>
+                            <Input
+                                id="name"
+                                placeholder="John Doe"
+                                value={newUserName}
+                                onChange={(e) => setNewUserName(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="newRole">Role</Label>
+                            <select
+                                id="newRole"
+                                value={newUserRole}
+                                onChange={(e) => setNewUserRole(e.target.value as any)}
+                                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                            >
+                                <option value="librarian">Librarian</option>
+                                <option value="library_admin">Library Admin</option>
+                                <option value="system_operator">System Operator</option>
+                            </select>
+                        </div>
+                        
+                        {newUserRole !== 'system_operator' && (
+                            <div className="grid gap-2">
+                                <Label htmlFor="newLibrary">Assign to Library</Label>
+                                <select
+                                    id="newLibrary"
+                                    value={newUserLibraryId}
+                                    onChange={(e) => setNewUserLibraryId(e.target.value)}
+                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                                >
+                                    <option value="">No library assigned</option>
+                                    {allLibraries.map((library) => (
+                                        <option key={library.id} value={library.id}>
+                                            {library.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleAddUser} disabled={isLoading}>
+                            {isLoading ? 'Creating...' : 'Create User'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Edit User Dialog */}
             <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
