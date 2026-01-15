@@ -37,7 +37,7 @@ interface UsersClientProps {
 }
 
 export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, _setUsers] = useState(initialUsers);
   const [editingUser, setEditingUser] = useState<Profile | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [selectedLibraryId, setSelectedLibraryId] = useState<string>("");

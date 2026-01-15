@@ -42,7 +42,7 @@ export function LibrariesClient({ initialLibraries }: LibrariesClientProps) {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const result = await createLibrary(formData);
+      await createLibrary(formData);
       toast.success("Library created successfully");
       setIsAddDialogOpen(false);
       window.location.reload();

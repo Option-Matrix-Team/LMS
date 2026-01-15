@@ -1,4 +1,4 @@
-import { Job, Queue, Worker } from "bullmq";
+import { Queue } from "bullmq";
 import IORedis from "ioredis";
 
 // Redis connection - lazy initialized

@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Queue } from "bullmq";
 import { differenceInDays, format } from "date-fns";
 import IORedis from "ioredis";
-import { addEmailJob, QUEUE_NAMES } from "./queue";
+import { addEmailJob } from "./queue";
 
 /**
  * Initializes the cron scheduler for daily background jobs.
@@ -49,8 +49,8 @@ export async function startCronScheduler() {
 export async function processOverdueReminders() {
   // Initialize Supabase admin client
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   );
 
   const now = new Date();
@@ -128,8 +128,8 @@ export async function processOverdueReminders() {
  */
 export async function processDueReminders() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   );
 
   const now = new Date();

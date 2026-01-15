@@ -22,7 +22,7 @@ export async function searchBooks(query: string) {
   if (!profile?.library_id) throw new Error("No library assigned");
 
   // Use the search function if query is provided
-  if (query && query.trim()) {
+  if (query?.trim()) {
     const { data, error } = await adminClient.rpc("search_books", {
       search_query: query.trim(),
       lib_id: profile.library_id,

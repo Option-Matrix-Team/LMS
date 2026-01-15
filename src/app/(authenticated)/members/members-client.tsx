@@ -37,10 +37,10 @@ export function MembersClient({ initialMembers }: MembersClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredMembers = members.filter(
-    (member) =>
-      member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (member.phone && member.phone.includes(searchQuery)),
+    (m) =>
+      m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.phone?.includes(searchQuery),
   );
 
   const handleAddMember = async (e: React.FormEvent<HTMLFormElement>) => {

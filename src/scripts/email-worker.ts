@@ -7,8 +7,8 @@
  * For production, run this as a separate process alongside the Next.js app.
  */
 
+import * as path from "node:path";
 import * as dotenv from "dotenv";
-import * as path from "path";
 
 // Load .env.local from project root
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });

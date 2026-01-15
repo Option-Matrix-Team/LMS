@@ -34,7 +34,7 @@ export async function uploadBookThumbnail(
 
     // Upload to Supabase Storage
     const adminClient = getSupabaseAdmin();
-    const { data, error } = await adminClient.storage
+    const { error } = await adminClient.storage
       .from(BUCKET_NAME)
       .upload(filename, buffer, {
         contentType: file.type,

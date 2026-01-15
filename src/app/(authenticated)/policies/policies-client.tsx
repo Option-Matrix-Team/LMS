@@ -88,7 +88,7 @@ export function PoliciesClient({
                   onChange={(e) =>
                     setPolicy({
                       ...policy,
-                      max_books_per_member: parseInt(e.target.value) || 1,
+                      max_books_per_member: parseInt(e.target.value, 10) || 1,
                     })
                   }
                   disabled={!isAdmin || isLoading}
@@ -119,7 +119,7 @@ export function PoliciesClient({
                   onChange={(e) =>
                     setPolicy({
                       ...policy,
-                      borrow_duration_days: parseInt(e.target.value) || 14,
+                      borrow_duration_days: parseInt(e.target.value, 10) || 14,
                     })
                   }
                   disabled={!isAdmin || isLoading}
@@ -152,7 +152,8 @@ export function PoliciesClient({
                   onChange={(e) =>
                     setPolicy({
                       ...policy,
-                      extension_duration_days: parseInt(e.target.value) || 0,
+                      extension_duration_days:
+                        parseInt(e.target.value, 10) || 0,
                     })
                   }
                   disabled={!isAdmin || isLoading}

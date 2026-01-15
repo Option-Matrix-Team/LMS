@@ -7,7 +7,6 @@ import {
   Plus,
   Search,
   Trash2,
-  Upload,
 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";

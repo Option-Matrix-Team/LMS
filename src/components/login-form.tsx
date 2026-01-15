@@ -38,7 +38,7 @@ export function LoginForm() {
         toast.success("Check your email for the login code");
         setStep("otp");
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -59,7 +59,7 @@ export function LoginForm() {
         router.push("/dashboard");
         router.refresh();
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

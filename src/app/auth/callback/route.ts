@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 
     if (!error && data.user) {
       // Ensure profile exists
-      await ensureProfileExists(data.user.id, data.user.email!);
+      await ensureProfileExists(data.user.id, data.user.email ?? "");
       return NextResponse.redirect(`${SITE_URL}/dashboard`);
     }
   }
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 
     if (!error && data.user) {
       // Ensure profile exists
-      await ensureProfileExists(data.user.id, data.user.email!);
+      await ensureProfileExists(data.user.id, data.user.email ?? "");
       return NextResponse.redirect(`${SITE_URL}/dashboard`);
     }
   }
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (user) {
-    await ensureProfileExists(user.id, user.email!);
+    await ensureProfileExists(user.id, user.email ?? "");
     return NextResponse.redirect(`${SITE_URL}/dashboard`);
   }
 
