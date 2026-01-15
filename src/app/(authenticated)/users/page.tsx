@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getLibraries } from "@/lib/queries/libraries";
+import { getAllUsers } from "@/lib/queries/users";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { getAllUsers } from "@/lib/queries/users";
-import { getLibraries } from "@/lib/queries/libraries";
 import { UsersClient } from "./users-client";
 
 export const metadata: Metadata = {
@@ -39,10 +39,7 @@ export default async function UsersPage() {
     );
   }
 
-  const [users, libraries] = await Promise.all([
-    getAllUsers(),
-    getLibraries(),
-  ]);
+  const [users, libraries] = await Promise.all([getAllUsers(), getLibraries()]);
 
   return (
     <UsersClient initialUsers={users || []} allLibraries={libraries || []} />

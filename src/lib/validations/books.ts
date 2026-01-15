@@ -9,7 +9,10 @@ export const AddBookSchema = z.object({
   isbn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  total_copies: z.coerce.number().min(1, "Must have at least 1 copy").default(1),
+  total_copies: z.coerce
+    .number()
+    .min(1, "Must have at least 1 copy")
+    .default(1),
 });
 
 export type AddBookInput = z.infer<typeof AddBookSchema>;

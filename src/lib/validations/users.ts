@@ -3,7 +3,11 @@ import { z } from "zod";
 /**
  * Valid user roles
  */
-export const UserRoleSchema = z.enum(["system_operator", "library_admin", "librarian"]);
+export const UserRoleSchema = z.enum([
+  "system_operator",
+  "library_admin",
+  "librarian",
+]);
 
 /**
  * Schema for creating a new user (System Operator only)

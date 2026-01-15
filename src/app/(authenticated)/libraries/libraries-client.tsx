@@ -47,7 +47,8 @@ export function LibrariesClient({ initialLibraries }: LibrariesClientProps) {
       setIsAddDialogOpen(false);
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to create library";
+      const message =
+        error instanceof Error ? error.message : "Failed to create library";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -67,7 +68,8 @@ export function LibrariesClient({ initialLibraries }: LibrariesClientProps) {
       setLibraries(libraries.filter((l) => l.id !== id));
       toast.success("Library deleted");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete library";
+      const message =
+        error instanceof Error ? error.message : "Failed to delete library";
       toast.error(message);
     }
   };

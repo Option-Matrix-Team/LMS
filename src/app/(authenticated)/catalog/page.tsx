@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getBooks } from "@/lib/queries/books";
+import { createClient } from "@/lib/supabase/server";
 import { CatalogClient } from "./catalog-client";
 
 export const metadata: Metadata = {

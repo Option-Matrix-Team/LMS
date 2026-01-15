@@ -154,7 +154,8 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
       setSelectedImage(null);
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to add book";
+      const message =
+        error instanceof Error ? error.message : "Failed to add book";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -175,7 +176,8 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
       setBooks(books.filter((b) => b.id !== id));
       toast.success("Book deleted");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete book";
+      const message =
+        error instanceof Error ? error.message : "Failed to delete book";
       toast.error(message);
     }
   };

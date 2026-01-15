@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getMembers } from "@/lib/queries/members";
+import { createClient } from "@/lib/supabase/server";
 import { MembersClient } from "./members-client";
 
 export const metadata: Metadata = {

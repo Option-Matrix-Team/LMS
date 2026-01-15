@@ -34,7 +34,8 @@ export async function addBook(formData: FormData) {
     throw new Error(result.error.issues[0].message);
   }
 
-  const { name, author, isbn, description, location, total_copies } = result.data;
+  const { name, author, isbn, description, location, total_copies } =
+    result.data;
 
   const { data, error } = await supabase
     .from("books")
@@ -74,7 +75,8 @@ export async function updateBook(id: string, formData: FormData) {
     throw new Error(result.error.issues[0].message);
   }
 
-  const { name, author, isbn, description, location, total_copies } = result.data;
+  const { name, author, isbn, description, location, total_copies } =
+    result.data;
 
   const { error } = await supabase
     .from("books")

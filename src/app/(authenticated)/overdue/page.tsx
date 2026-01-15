@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getOverdueBorrowings } from "@/lib/queries/borrowings";
+import { createClient } from "@/lib/supabase/server";
 import { OverdueClient } from "./overdue-client";
 
 export const metadata: Metadata = {

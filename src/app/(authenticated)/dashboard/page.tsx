@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import {
   AlertCircle,
   BookMarked,
@@ -7,6 +6,7 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: "Dashboard",
   description: "Your library overview and statistics",
 };
+
 import { Button } from "@/components/ui/button";
 import {
   Card,

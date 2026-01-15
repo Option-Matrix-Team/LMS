@@ -43,7 +43,7 @@ export async function signInWithOtp(email: string) {
 /**
  * Verifies OTP token and completes email authentication.
  * Creates user profile if it doesn't exist after successful verification.
- * 
+ *
  * @param email - User's email address
  * @param token - OTP token from email
  * @returns Success result or error message
@@ -125,7 +125,7 @@ export async function getCurrentUser() {
  * Ensures a user profile exists for the authenticated user.
  * Creates a default librarian profile if one doesn't exist.
  * Called from dashboard to handle edge cases.
- * 
+ *
  * @returns User profile with library data, or null if not authenticated
  */
 export async function ensureProfile() {

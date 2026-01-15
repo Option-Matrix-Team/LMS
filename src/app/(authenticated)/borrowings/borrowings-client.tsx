@@ -38,7 +38,8 @@ export function BorrowingsClient({
   books,
   members,
 }: BorrowingsClientProps) {
-  const [borrowings, setBorrowings] = useState<BorrowingWithRelations[]>(initialBorrowings);
+  const [borrowings, setBorrowings] =
+    useState<BorrowingWithRelations[]>(initialBorrowings);
   const [isIssueDialogOpen, setIsIssueDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [memberSearch, setMemberSearch] = useState("");
@@ -51,7 +52,7 @@ export function BorrowingsClient({
   const filteredMembers = members.filter(
     (m) =>
       m.email.toLowerCase().includes(memberSearch.toLowerCase()) ||
-      (m.phone && m.phone.includes(memberSearch)),
+      m.phone?.includes(memberSearch),
   );
 
   const handleIssueBook = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,7 +78,8 @@ export function BorrowingsClient({
       setMemberSearch("");
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to issue book";
+      const message =
+        error instanceof Error ? error.message : "Failed to issue book";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -92,7 +94,8 @@ export function BorrowingsClient({
       setBorrowings(borrowings.filter((b) => b.id !== borrowingId));
       toast.success("Book returned successfully");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to return book";
+      const message =
+        error instanceof Error ? error.message : "Failed to return book";
       toast.error(message);
     }
   };
@@ -143,9 +146,10 @@ export function BorrowingsClient({
                     filteredMembers.length > 0 && (
                       <div className="border rounded-md max-h-32 overflow-y-auto">
                         {filteredMembers.map((m) => (
-                          <div
+                          <button
+                            type="button"
                             key={m.id}
-                            className="p-2 hover:bg-muted cursor-pointer"
+                            className="w-full text-left p-2 hover:bg-muted cursor-pointer"
                             onClick={() => {
                               setSelectedMember(m);
                               setMemberSearch(m.name);
@@ -156,7 +160,7 @@ export function BorrowingsClient({
                             <div className="text-xs text-muted-foreground">
                               {m.email} • {m.phone || "No phone"}
                             </div>
-                          </div>
+                          </button>
                         ))}
                       </div>
                     )}

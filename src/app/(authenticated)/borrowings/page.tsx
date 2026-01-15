@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { getBorrowings } from "@/lib/queries/borrowings";
 import { getBooks } from "@/lib/queries/books";
+import { getBorrowings } from "@/lib/queries/borrowings";
 import { getMembers } from "@/lib/queries/members";
+import { createClient } from "@/lib/supabase/server";
 import { BorrowingsClient } from "./borrowings-client";
 
 export const metadata: Metadata = {

@@ -60,8 +60,7 @@ export async function compressImage(
       // Draw image on canvas
       ctx.drawImage(img, 0, 0, width, height);
 
-
-// img (blob preview) kept as-is since Next.js Image doesn't support blob URLs.
+      // img (blob preview) kept as-is since Next.js Image doesn't support blob URLs.
       // Convert to WebP blob
       canvas.toBlob(
         (blob) => {

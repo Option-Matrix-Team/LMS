@@ -21,7 +21,8 @@ interface OverdueClientProps {
 }
 
 export function OverdueClient({ initialBorrowings }: OverdueClientProps) {
-  const [borrowings, setBorrowings] = useState<BorrowingWithRelations[]>(initialBorrowings);
+  const [borrowings, setBorrowings] =
+    useState<BorrowingWithRelations[]>(initialBorrowings);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const handleReturnBook = async (borrowingId: string) => {
@@ -33,7 +34,8 @@ export function OverdueClient({ initialBorrowings }: OverdueClientProps) {
       setBorrowings(borrowings.filter((b) => b.id !== borrowingId));
       toast.success("Book returned successfully");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to return book";
+      const message =
+        error instanceof Error ? error.message : "Failed to return book";
       toast.error(message);
     } finally {
       setLoadingId(null);
@@ -47,7 +49,8 @@ export function OverdueClient({ initialBorrowings }: OverdueClientProps) {
       toast.success("Borrowing extended successfully");
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to extend borrowing";
+      const message =
+        error instanceof Error ? error.message : "Failed to extend borrowing";
       toast.error(message);
     } finally {
       setLoadingId(null);

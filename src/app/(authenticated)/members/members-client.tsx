@@ -54,7 +54,8 @@ export function MembersClient({ initialMembers }: MembersClientProps) {
       setIsAddDialogOpen(false);
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to add member";
+      const message =
+        error instanceof Error ? error.message : "Failed to add member";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -69,7 +70,8 @@ export function MembersClient({ initialMembers }: MembersClientProps) {
       setMembers(members.filter((m) => m.id !== id));
       toast.success("Member deleted");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete member";
+      const message =
+        error instanceof Error ? error.message : "Failed to delete member";
       toast.error(message);
     }
   };

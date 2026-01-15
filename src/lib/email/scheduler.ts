@@ -8,7 +8,7 @@ import { addEmailJob, QUEUE_NAMES } from "./queue";
  * Initializes the cron scheduler for daily background jobs.
  * Sets up a BullMQ queue with Redis connection for overdue book checks.
  * Runs daily at 9 AM.
- * 
+ *
  * @returns The configured cron queue instance
  */
 export async function startCronScheduler() {
@@ -41,7 +41,7 @@ export async function startCronScheduler() {
  * Processes all overdue borrowings and queues reminder emails.
  * Fetches borrowings past due date that haven't been returned,
  * then sends overdue reminder emails to each member.
- * 
+ *
  * @remarks
  * Uses Supabase admin client to bypass RLS for cross-library access.
  * Calculates days overdue for each borrowing.
@@ -87,8 +87,15 @@ export async function processOverdueReminders() {
 
   // Send reminder for each overdue book
   for (const borrowing of overdueBorrowings || []) {
-    const member = borrowing.members as unknown as { name: string; email: string } | null;
-    const book = borrowing.books as unknown as { name: string; author: string; libraries?: { name: string } | null } | null;
+    const member = borrowing.members as unknown as {
+      name: string;
+      email: string;
+    } | null;
+    const book = borrowing.books as unknown as {
+      name: string;
+      author: string;
+      libraries?: { name: string } | null;
+    } | null;
     const library = book?.libraries;
 
     if (!member?.email) continue;
@@ -115,7 +122,7 @@ export async function processOverdueReminders() {
  * Processes borrowings due within 24 hours and queues reminder emails.
  * Fetches active borrowings with due dates in the next day,
  * then sends due-soon reminder emails to each member.
- * 
+ *
  * @remarks
  * Uses Supabase admin client to bypass RLS for cross-library access.
  */
@@ -160,8 +167,15 @@ export async function processDueReminders() {
   console.log(`Found ${dueSoonBorrowings?.length || 0} books due in 24 hours`);
 
   for (const borrowing of dueSoonBorrowings || []) {
-    const member = borrowing.members as unknown as { name: string; email: string } | null;
-    const book = borrowing.books as unknown as { name: string; author: string; libraries?: { name: string } | null } | null;
+    const member = borrowing.members as unknown as {
+      name: string;
+      email: string;
+    } | null;
+    const book = borrowing.books as unknown as {
+      name: string;
+      author: string;
+      libraries?: { name: string } | null;
+    } | null;
     const library = book?.libraries;
 
     if (!member?.email) continue;

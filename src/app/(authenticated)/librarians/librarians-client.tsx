@@ -70,7 +70,8 @@ export function LibrariansClient({
         window.location.reload();
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to add librarian";
+      const message =
+        error instanceof Error ? error.message : "Failed to add librarian";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -90,7 +91,10 @@ export function LibrariansClient({
         toast.success("Staff member removed");
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to remove staff member";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove staff member";
       toast.error(message);
     }
   };
@@ -115,7 +119,8 @@ export function LibrariansClient({
         toast.success(`Staff member ${action}d successfully`);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update role";
+      const message =
+        error instanceof Error ? error.message : "Failed to update role";
       toast.error(message);
     }
   };

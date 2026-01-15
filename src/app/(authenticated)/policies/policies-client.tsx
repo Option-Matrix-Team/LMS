@@ -46,7 +46,8 @@ export function PoliciesClient({
       });
       toast.success("Borrowing policy updated successfully");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update policy";
+      const message =
+        error instanceof Error ? error.message : "Failed to update policy";
       toast.error(message);
     } finally {
       setIsLoading(false);
