@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import getSupabaseAdmin from "@/lib/supabase/admin";
+import { CreateUserSchema } from "@/lib/validations/users";
 
 export async function updateUserRole(
   userId: string,
@@ -51,11 +52,20 @@ export async function createUser(data: {
 }) {
   const adminClient = getSupabaseAdmin();
 
+  // Validate input
+  const result = CreateUserSchema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { email, name, role, libraryId } = result.data;
+
   // Check if user already exists
   const { data: existingProfile } = await adminClient
     .from("profiles")
     .select("id")
-    .eq("email", data.email)
+    .eq("email", email)
     .single();
 
   if (existingProfile) {
@@ -65,10 +75,10 @@ export async function createUser(data: {
   // Create auth user using admin API
   const { data: authUser, error: authError } =
     await adminClient.auth.admin.createUser({
-      email: data.email,
+      email,
       email_confirm: true, // Auto-confirm the email
       user_metadata: {
-        name: data.name,
+        name,
       },
     });
 
@@ -84,10 +94,10 @@ export async function createUser(data: {
   // Create profile
   const { error: profileError } = await adminClient.from("profiles").insert({
     id: authUser.user.id,
-    email: data.email,
-    name: data.name,
-    role: data.role,
-    library_id: data.libraryId || null,
+    email,
+    name,
+    role,
+    library_id: libraryId || null,
   });
 
   if (profileError) {

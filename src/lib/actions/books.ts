@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { AddBookSchema, UpdateBookSchema } from "@/lib/validations/books";
 
 export async function addBook(formData: FormData) {
   const supabase = await createClient();
@@ -19,12 +20,21 @@ export async function addBook(formData: FormData) {
 
   if (!profile?.library_id) throw new Error("No library assigned");
 
-  const name = formData.get("name") as string;
-  const author = formData.get("author") as string;
-  const isbn = (formData.get("isbn") as string) || null;
-  const description = (formData.get("description") as string) || null;
-  const location = (formData.get("location") as string) || null;
-  const totalCopies = parseInt(formData.get("total_copies") as string) || 1;
+  // Validate input
+  const result = AddBookSchema.safeParse({
+    name: formData.get("name"),
+    author: formData.get("author"),
+    isbn: formData.get("isbn") || null,
+    description: formData.get("description") || null,
+    location: formData.get("location") || null,
+    total_copies: formData.get("total_copies"),
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, author, isbn, description, location, total_copies } = result.data;
 
   const { data, error } = await supabase
     .from("books")
@@ -35,8 +45,8 @@ export async function addBook(formData: FormData) {
       isbn,
       description,
       location,
-      total_copies: totalCopies,
-      available_copies: totalCopies,
+      total_copies,
+      available_copies: total_copies,
     })
     .select("id")
     .single();
@@ -50,12 +60,21 @@ export async function addBook(formData: FormData) {
 export async function updateBook(id: string, formData: FormData) {
   const supabase = await createClient();
 
-  const name = formData.get("name") as string;
-  const author = formData.get("author") as string;
-  const isbn = (formData.get("isbn") as string) || null;
-  const description = (formData.get("description") as string) || null;
-  const location = (formData.get("location") as string) || null;
-  const totalCopies = parseInt(formData.get("total_copies") as string) || 1;
+  // Validate input
+  const result = UpdateBookSchema.safeParse({
+    name: formData.get("name"),
+    author: formData.get("author"),
+    isbn: formData.get("isbn") || null,
+    description: formData.get("description") || null,
+    location: formData.get("location") || null,
+    total_copies: formData.get("total_copies"),
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, author, isbn, description, location, total_copies } = result.data;
 
   const { error } = await supabase
     .from("books")
@@ -65,7 +84,7 @@ export async function updateBook(id: string, formData: FormData) {
       isbn,
       description,
       location,
-      total_copies: totalCopies,
+      total_copies,
     })
     .eq("id", id);
 

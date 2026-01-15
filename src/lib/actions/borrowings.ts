@@ -7,6 +7,7 @@ import {
   queueReturnedEmail,
 } from "@/lib/email/notifications";
 import { createClient } from "@/lib/supabase/server";
+import { IssueBookSchema } from "@/lib/validations/borrowings";
 
 export async function issueBook(formData: FormData) {
   const supabase = await createClient();
@@ -24,9 +25,18 @@ export async function issueBook(formData: FormData) {
 
   if (!profile?.library_id) throw new Error("No library assigned");
 
-  const bookId = formData.get("book_id") as string;
-  const memberId = formData.get("member_id") as string;
-  const phone = formData.get("phone") as string;
+  // Validate input
+  const result = IssueBookSchema.safeParse({
+    book_id: formData.get("book_id"),
+    member_id: formData.get("member_id"),
+    phone: formData.get("phone"),
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { book_id: bookId, member_id: memberId, phone } = result.data;
 
   // Check if member has overdue books
   const { data: overdueBooks } = await supabase
@@ -88,7 +98,7 @@ export async function issueBook(formData: FormData) {
   // Queue email notification
   if (member?.email && book && newBorrowing) {
     try {
-      const libraryName = (profile.libraries as any)?.name || "Library";
+      const libraryName = (profile.libraries as { name?: string })?.name || "Library";
       await queueBorrowedEmail(
         { name: member.name, email: member.email },
         { name: book.name, author: book.author },
@@ -132,8 +142,8 @@ export async function returnBook(borrowingId: string) {
   await supabase.rpc("increment_book_copies", { book_id: borrowing.book_id });
 
   // Queue email notification
-  const member = borrowing.members as any;
-  const book = borrowing.books as any;
+  const member = borrowing.members as { name: string; email: string } | null;
+  const book = borrowing.books as { name: string; author: string; libraries?: { name: string } | null } | null;
   if (member?.email && book) {
     try {
       const libraryName = book.libraries?.name || "Library";
@@ -204,8 +214,8 @@ export async function extendBorrowing(borrowingId: string) {
   if (error) throw error;
 
   // Queue email notification
-  const member = borrowing.members as any;
-  const book = borrowing.books as any;
+  const member = borrowing.members as { name: string; email: string } | null;
+  const book = borrowing.books as { name: string; author: string; libraries?: { name: string } | null } | null;
   if (member?.email && book) {
     try {
       const libraryName = book.libraries?.name || "Library";

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { AddMemberSchema, UpdateMemberSchema } from "@/lib/validations/members";
 
 export async function addMember(formData: FormData) {
   const supabase = await createClient();
@@ -19,10 +20,19 @@ export async function addMember(formData: FormData) {
 
   if (!profile?.library_id) throw new Error("No library assigned");
 
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const phone = (formData.get("phone") as string) || null;
-  const address = (formData.get("address") as string) || null;
+  // Validate input
+  const result = AddMemberSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    phone: formData.get("phone") || null,
+    address: formData.get("address") || null,
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, email, phone, address } = result.data;
 
   const { error } = await supabase.from("members").insert({
     library_id: profile.library_id,
@@ -41,10 +51,19 @@ export async function addMember(formData: FormData) {
 export async function updateMember(id: string, formData: FormData) {
   const supabase = await createClient();
 
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const phone = (formData.get("phone") as string) || null;
-  const address = (formData.get("address") as string) || null;
+  // Validate input
+  const result = UpdateMemberSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    phone: formData.get("phone") || null,
+    address: formData.get("address") || null,
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, email, phone, address } = result.data;
 
   const { error } = await supabase
     .from("members")

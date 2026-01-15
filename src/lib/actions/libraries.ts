@@ -2,12 +2,22 @@
 
 import { revalidatePath } from "next/cache";
 import getSupabaseAdmin from "@/lib/supabase/admin";
+import { CreateLibrarySchema, UpdateLibrarySchema } from "@/lib/validations/libraries";
 
 export async function createLibrary(formData: FormData) {
   const adminClient = getSupabaseAdmin();
 
-  const name = formData.get("name") as string;
-  const address = (formData.get("address") as string) || null;
+  // Validate input
+  const result = CreateLibrarySchema.safeParse({
+    name: formData.get("name"),
+    address: formData.get("address") || null,
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, address } = result.data;
 
   const { data, error } = await adminClient
     .from("libraries")
@@ -32,8 +42,17 @@ export async function createLibrary(formData: FormData) {
 export async function updateLibrary(id: string, formData: FormData) {
   const adminClient = getSupabaseAdmin();
 
-  const name = formData.get("name") as string;
-  const address = (formData.get("address") as string) || null;
+  // Validate input
+  const result = UpdateLibrarySchema.safeParse({
+    name: formData.get("name"),
+    address: formData.get("address") || null,
+  });
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const { name, address } = result.data;
 
   const { error } = await adminClient
     .from("libraries")
