@@ -9,6 +9,15 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { IssueBookSchema } from "@/lib/validations/borrowings";
 
+/**
+ * Issues a book to a library member.
+ * Validates member eligibility, updates book availability,
+ * and queues notification email.
+ * 
+ * @param formData - Form data containing book_id, member_id, and phone
+ * @returns Success result object
+ * @throws Error if user not authenticated, no library assigned, or member has overdue books
+ */
 export async function issueBook(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -116,6 +125,15 @@ export async function issueBook(formData: FormData) {
   return { success: true };
 }
 
+/**
+ * Processes a book return for a borrowing record.
+ * Marks the borrowing as returned, increases available copies,
+ * and queues return confirmation email.
+ * 
+ * @param borrowingId - UUID of the borrowing record to return
+ * @returns Success result object
+ * @throws Error if borrowing not found
+ */
 export async function returnBook(borrowingId: string) {
   const supabase = await createClient();
 
@@ -163,6 +181,15 @@ export async function returnBook(borrowingId: string) {
   return { success: true };
 }
 
+/**
+ * Extends the due date for an existing borrowing.
+ * Applies library's extension policy and queues notification email.
+ * Each borrowing can only be extended once.
+ * 
+ * @param borrowingId - UUID of the borrowing record to extend
+ * @returns Success result object
+ * @throws Error if user not authenticated, borrowing not found, or already extended
+ */
 export async function extendBorrowing(borrowingId: string) {
   const supabase = await createClient();
   const {

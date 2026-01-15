@@ -40,6 +40,14 @@ export async function signInWithOtp(email: string) {
   return { success: true, message: "Check your email for the login code" };
 }
 
+/**
+ * Verifies OTP token and completes email authentication.
+ * Creates user profile if it doesn't exist after successful verification.
+ * 
+ * @param email - User's email address
+ * @param token - OTP token from email
+ * @returns Success result or error message
+ */
 export async function verifyOtp(email: string, token: string) {
   const supabase = await createClient();
 
@@ -113,7 +121,13 @@ export async function getCurrentUser() {
   return profile;
 }
 
-// Helper to ensure profile exists (call from dashboard)
+/**
+ * Ensures a user profile exists for the authenticated user.
+ * Creates a default librarian profile if one doesn't exist.
+ * Called from dashboard to handle edge cases.
+ * 
+ * @returns User profile with library data, or null if not authenticated
+ */
 export async function ensureProfile() {
   const supabase = await createClient();
   const {

@@ -42,8 +42,15 @@ export async function removeUserFromLibrary(userId: string) {
   return { success: true };
 }
 
-// Create a new user (System Operator only)
-// Creates both the auth user and profile
+/**
+ * Creates a new user in the system (System Operator only).
+ * Creates both the Supabase auth user and the profile record.
+ * Validates input with Zod and checks for existing users.
+ * 
+ * @param data - User creation data including email, name, role, and optional libraryId
+ * @returns Success result with userId
+ * @throws Error if validation fails, user already exists, or creation fails
+ */
 export async function createUser(data: {
   email: string;
   name: string;
@@ -111,7 +118,14 @@ export async function createUser(data: {
   return { success: true, userId: authUser.user.id };
 }
 
-// Delete a user (System Operator only)
+/**
+ * Deletes a user from the system (System Operator only).
+ * Removes both the profile record and Supabase auth user.
+ * 
+ * @param userId - UUID of the user to delete
+ * @returns Success result object
+ * @throws Error if profile or auth deletion fails
+ */
 export async function deleteUser(userId: string) {
   const adminClient = getSupabaseAdmin();
 

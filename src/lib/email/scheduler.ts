@@ -4,7 +4,13 @@ import { differenceInDays, format } from "date-fns";
 import IORedis from "ioredis";
 import { addEmailJob, QUEUE_NAMES } from "./queue";
 
-// Initialize cron scheduler for daily jobs
+/**
+ * Initializes the cron scheduler for daily background jobs.
+ * Sets up a BullMQ queue with Redis connection for overdue book checks.
+ * Runs daily at 9 AM.
+ * 
+ * @returns The configured cron queue instance
+ */
 export async function startCronScheduler() {
   const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
@@ -31,7 +37,15 @@ export async function startCronScheduler() {
   return cronQueue;
 }
 
-// Process overdue books and send reminders
+/**
+ * Processes all overdue borrowings and queues reminder emails.
+ * Fetches borrowings past due date that haven't been returned,
+ * then sends overdue reminder emails to each member.
+ * 
+ * @remarks
+ * Uses Supabase admin client to bypass RLS for cross-library access.
+ * Calculates days overdue for each borrowing.
+ */
 export async function processOverdueReminders() {
   // Initialize Supabase admin client
   const supabase = createClient(
@@ -97,7 +111,14 @@ export async function processOverdueReminders() {
   }
 }
 
-// Process due reminders (books due in next 24 hours)
+/**
+ * Processes borrowings due within 24 hours and queues reminder emails.
+ * Fetches active borrowings with due dates in the next day,
+ * then sends due-soon reminder emails to each member.
+ * 
+ * @remarks
+ * Uses Supabase admin client to bypass RLS for cross-library access.
+ */
 export async function processDueReminders() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
