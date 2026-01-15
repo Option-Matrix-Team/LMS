@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getBooks } from "@/lib/queries/books";
 import { CatalogClient } from "./catalog-client";
 
+export const metadata: Metadata = {
+  title: "Catalog",
+  description: "Browse and manage your library book catalog",
+};
 export default async function CatalogPage() {
   const supabase = await createClient();
   const {

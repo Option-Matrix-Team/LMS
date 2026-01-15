@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LIMS - Library Management System",
-  description: "A secure, multi-tenant library platform",
+  title: {
+    default: "LIMS - Library Management System",
+    template: "%s | LIMS",
+  },
+  description: "A secure, multi-tenant library management platform",
 };
 
 export default function RootLayout({

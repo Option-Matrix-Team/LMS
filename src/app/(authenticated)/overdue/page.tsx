@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getOverdueBorrowings } from "@/lib/queries/borrowings";
 import { OverdueClient } from "./overdue-client";
 
+export const metadata: Metadata = {
+  title: "Overdue Books",
+  description: "Track and manage overdue book returns",
+};
 export default async function OverduePage() {
   const supabase = await createClient();
   const {

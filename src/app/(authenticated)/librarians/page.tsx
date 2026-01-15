@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { LibrariansClient } from "./librarians-client";
 
+export const metadata: Metadata = {
+  title: "Staff Management",
+  description: "Manage library staff and permissions",
+};
 export default async function LibrariansPage() {
   const supabase = await createClient();
   const {

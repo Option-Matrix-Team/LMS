@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getBorrowings } from "@/lib/queries/borrowings";
@@ -5,6 +6,10 @@ import { getBooks } from "@/lib/queries/books";
 import { getMembers } from "@/lib/queries/members";
 import { BorrowingsClient } from "./borrowings-client";
 
+export const metadata: Metadata = {
+  title: "Borrowings",
+  description: "Manage book borrowings and returns",
+};
 export default async function BorrowingsPage() {
   const supabase = await createClient();
   const {

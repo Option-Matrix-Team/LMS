@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getMembers } from "@/lib/queries/members";
 import { MembersClient } from "./members-client";
 
+export const metadata: Metadata = {
+  title: "Members",
+  description: "Manage library members and their information",
+};
 export default async function MembersPage() {
   const supabase = await createClient();
   const {

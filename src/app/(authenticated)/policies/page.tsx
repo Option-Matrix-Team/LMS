@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getBorrowingPolicy } from "@/lib/actions/policies";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { PoliciesClient } from "./policies-client";
 
+export const metadata: Metadata = {
+  title: "Policies",
+  description: "Configure library borrowing policies",
+};
 export default async function PoliciesPage() {
   const supabase = await createClient();
   const {

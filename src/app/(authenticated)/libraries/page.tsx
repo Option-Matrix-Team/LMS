@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { getLibraries } from "@/lib/queries/libraries";
 import { LibrariesClient } from "./libraries-client";
 
+export const metadata: Metadata = {
+  title: "Libraries",
+  description: "Manage library organizations",
+};
 export default async function LibrariesPage() {
   const supabase = await createClient();
   const {
