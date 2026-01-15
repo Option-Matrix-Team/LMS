@@ -9,6 +9,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -362,9 +363,11 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
               <TableRow key={book.id}>
                 <TableCell>
                   {book.thumbnail_url ? (
-                    <img
+                    <Image
                       src={book.thumbnail_url}
                       alt={book.name}
+                      width={40}
+                      height={56}
                       className="w-10 h-14 object-cover rounded"
                     />
                   ) : (
