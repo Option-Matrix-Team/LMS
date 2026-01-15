@@ -1,64 +1,46 @@
-export type UserRole = 'system_operator' | 'library_admin' | 'librarian';
+// Re-export database types from Supabase
+import type { Database } from "./database.types";
 
-export interface Library {
-    id: string;
-    name: string;
-    address: string | null;
-    created_at: string;
+// Export the Database type for direct use
+export type { Database };
+
+// Table row types using generated types
+export type Library = Database["public"]["Tables"]["libraries"]["Row"];
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type Book = Database["public"]["Tables"]["books"]["Row"];
+export type Member = Database["public"]["Tables"]["members"]["Row"];
+export type Borrowing = Database["public"]["Tables"]["borrowings"]["Row"];
+export type BorrowingPolicy = Database["public"]["Tables"]["borrowing_policies"]["Row"];
+
+// Insert types
+export type LibraryInsert = Database["public"]["Tables"]["libraries"]["Insert"];
+export type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+export type BookInsert = Database["public"]["Tables"]["books"]["Insert"];
+export type MemberInsert = Database["public"]["Tables"]["members"]["Insert"];
+export type BorrowingInsert = Database["public"]["Tables"]["borrowings"]["Insert"];
+export type BorrowingPolicyInsert = Database["public"]["Tables"]["borrowing_policies"]["Insert"];
+
+// Update types
+export type LibraryUpdate = Database["public"]["Tables"]["libraries"]["Update"];
+export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+export type BookUpdate = Database["public"]["Tables"]["books"]["Update"];
+export type MemberUpdate = Database["public"]["Tables"]["members"]["Update"];
+export type BorrowingUpdate = Database["public"]["Tables"]["borrowings"]["Update"];
+export type BorrowingPolicyUpdate = Database["public"]["Tables"]["borrowing_policies"]["Update"];
+
+// Custom union types
+export type UserRole = "system_operator" | "library_admin" | "librarian";
+
+// Extended types with relationships (for queries with joins)
+export interface ProfileWithLibrary extends Profile {
+  libraries?: Library | null;
 }
 
-export interface Profile {
-    id: string;
-    email: string;
-    name: string | null;
-    role: UserRole;
-    library_id: string | null;
-    created_at: string;
-    libraries?: Library;
+export interface BorrowingWithRelations extends Borrowing {
+  books?: Book | null;
+  members?: Member | null;
 }
 
-export interface Book {
-    id: string;
-    library_id: string;
-    name: string;
-    author: string;
-    description: string | null;
-    isbn: string | null;
-    location: string | null;
-    thumbnail_url: string | null;
-    available_copies: number;
-    total_copies: number;
-    created_at: string;
-}
-
-export interface Member {
-    id: string;
-    library_id: string;
-    name: string;
-    email: string;
-    phone: string | null;
-    address: string | null;
-    created_at: string;
-}
-
-export interface Borrowing {
-    id: string;
-    book_id: string;
-    member_id: string;
-    librarian_id: string;
-    borrowed_at: string;
-    due_date: string;
-    returned_at: string | null;
-    extended_at: string | null;
-    phone_at_borrow: string;
-    books?: Book;
-    members?: Member;
-}
-
-export interface BorrowingPolicy {
-    id: string;
-    library_id: string;
-    max_books_per_member: number;
-    borrow_duration_days: number;
-    extension_duration_days: number;
+export interface BookWithLibrary extends Book {
+  libraries?: Library | null;
 }

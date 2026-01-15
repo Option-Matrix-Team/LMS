@@ -1,25 +1,25 @@
 export const routes = {
-    // Auth routes
-    login: "/login",
+  // Auth routes
+  login: "/login",
 
-    // Dashboard
-    dashboard: "/dashboard",
+  // Dashboard
+  dashboard: "/dashboard",
 
-    // Catalog management
-    catalog: "/catalog",
+  // Catalog management
+  catalog: "/catalog",
 
-    // Member management
-    members: "/members",
+  // Member management
+  members: "/members",
 
-    // Borrowing
-    borrowings: "/borrowings",
-    overdue: "/overdue",
+  // Borrowing
+  borrowings: "/borrowings",
+  overdue: "/overdue",
 
-    // System Operator routes
-    libraries: "/libraries",
-    users: "/users",
+  // System Operator routes
+  libraries: "/libraries",
+  users: "/users",
 
-    // Library Admin routes
-    librarians: "/librarians",
-    policies: "/policies",
+  // Library Admin routes
+  librarians: "/librarians",
+  policies: "/policies",
 } as const;

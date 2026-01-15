@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Toaster as Sonner, toast } from "sonner"
+import { Toaster as Sonner, toast } from "sonner";
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 function Toaster({ ...props }: ToasterProps) {
   return (
@@ -21,7 +21,7 @@ function Toaster({ ...props }: ToasterProps) {
       }}
       {...props}
     />
-  )
+  );
 }
 
-export { Toaster, toast }
+export { Toaster, toast };
