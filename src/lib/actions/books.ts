@@ -3,32 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-export async function getBooks() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) throw new Error("Not authenticated");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("library_id")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile?.library_id) throw new Error("No library assigned");
-
-  const { data, error } = await supabase
-    .from("books")
-    .select("*")
-    .eq("library_id", profile.library_id)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data;
-}
-
 export async function addBook(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -110,31 +84,4 @@ export async function deleteBook(id: string) {
 
   revalidatePath("/catalog");
   return { success: true };
-}
-
-export async function searchBooks(query: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) throw new Error("Not authenticated");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("library_id")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile?.library_id) throw new Error("No library assigned");
-
-  const { data, error } = await supabase
-    .from("books")
-    .select("*")
-    .eq("library_id", profile.library_id)
-    .or(`name.ilike.%${query}%,author.ilike.%${query}%,isbn.ilike.%${query}%`)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data;
 }

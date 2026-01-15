@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { getLibraries } from "@/lib/queries/libraries";
 import { LibrariesClient } from "./libraries-client";
 
 export default async function LibrariesPage() {
@@ -32,11 +33,7 @@ export default async function LibrariesPage() {
     );
   }
 
-  // Get all libraries
-  const { data: libraries } = await adminClient
-    .from("libraries")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const libraries = await getLibraries();
 
   return <LibrariesClient initialLibraries={libraries || []} />;
 }

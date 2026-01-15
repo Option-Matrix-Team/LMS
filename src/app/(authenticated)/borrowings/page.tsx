@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getBorrowings } from "@/lib/queries/borrowings";
+import { getBooks } from "@/lib/queries/books";
+import { getMembers } from "@/lib/queries/members";
 import { BorrowingsClient } from "./borrowings-client";
 
 export default async function BorrowingsPage() {
@@ -27,26 +30,17 @@ export default async function BorrowingsPage() {
     );
   }
 
-  const [borrowingsRes, booksRes, membersRes] = await Promise.all([
-    supabase
-      .from("borrowings")
-      .select("*, books(*), members(*)")
-      .is("returned_at", null)
-      .order("borrowed_at", { ascending: false }),
-    supabase.from("books").select("*").eq("library_id", profile.library_id),
-    supabase.from("members").select("*").eq("library_id", profile.library_id),
+  const [borrowings, books, members] = await Promise.all([
+    getBorrowings(),
+    getBooks(),
+    getMembers(),
   ]);
-
-  // Filter borrowings to only show those from current library's books
-  const libraryBorrowings = (borrowingsRes.data || []).filter(
-    (b) => b.books?.library_id === profile.library_id,
-  );
 
   return (
     <BorrowingsClient
-      initialBorrowings={libraryBorrowings}
-      books={booksRes.data || []}
-      members={membersRes.data || []}
+      initialBorrowings={borrowings || []}
+      books={books || []}
+      members={members || []}
     />
   );
 }

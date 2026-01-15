@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getMembers } from "@/lib/queries/members";
 import { MembersClient } from "./members-client";
 
 export default async function MembersPage() {
@@ -27,11 +28,7 @@ export default async function MembersPage() {
     );
   }
 
-  const { data: members } = await supabase
-    .from("members")
-    .select("*")
-    .eq("library_id", profile.library_id)
-    .order("created_at", { ascending: false });
+  const members = await getMembers();
 
   return <MembersClient initialMembers={members || []} />;
 }

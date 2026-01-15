@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getOverdueBorrowings } from "@/lib/queries/borrowings";
 import { OverdueClient } from "./overdue-client";
 
 export default async function OverduePage() {
@@ -27,17 +28,7 @@ export default async function OverduePage() {
     );
   }
 
-  const { data: borrowings } = await supabase
-    .from("borrowings")
-    .select("*, books(*), members(*)")
-    .is("returned_at", null)
-    .lt("due_date", new Date().toISOString())
-    .order("due_date", { ascending: true });
+  const borrowings = await getOverdueBorrowings();
 
-  // Filter to library's books only
-  const libraryBorrowings = (borrowings || []).filter(
-    (b) => b.books?.library_id === profile.library_id,
-  );
-
-  return <OverdueClient initialBorrowings={libraryBorrowings} />;
+  return <OverdueClient initialBorrowings={borrowings || []} />;
 }

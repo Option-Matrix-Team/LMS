@@ -3,18 +3,6 @@
 import { revalidatePath } from "next/cache";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 
-export async function getLibraries() {
-  const adminClient = getSupabaseAdmin();
-
-  const { data, error } = await adminClient
-    .from("libraries")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data;
-}
-
 export async function createLibrary(formData: FormData) {
   const adminClient = getSupabaseAdmin();
 
@@ -67,19 +55,6 @@ export async function deleteLibrary(id: string) {
 
   revalidatePath("/libraries");
   return { success: true };
-}
-
-export async function getLibraryAdmins(libraryId: string) {
-  const adminClient = getSupabaseAdmin();
-
-  const { data, error } = await adminClient
-    .from("profiles")
-    .select("*")
-    .eq("library_id", libraryId)
-    .eq("role", "library_admin");
-
-  if (error) throw error;
-  return data;
 }
 
 export async function assignLibraryAdmin(libraryId: string, userId: string) {

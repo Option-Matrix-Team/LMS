@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getBooks } from "@/lib/queries/books";
 import { CatalogClient } from "./catalog-client";
 
 export default async function CatalogPage() {
@@ -27,11 +28,7 @@ export default async function CatalogPage() {
     );
   }
 
-  const { data: books } = await supabase
-    .from("books")
-    .select("*")
-    .eq("library_id", profile.library_id)
-    .order("created_at", { ascending: false });
+  const books = await getBooks();
 
   return <CatalogClient initialBooks={books || []} />;
 }

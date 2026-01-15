@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import getSupabaseAdmin from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { getAllUsers } from "@/lib/queries/users";
+import { getLibraries } from "@/lib/queries/libraries";
 import { UsersClient } from "./users-client";
 
 export default async function UsersPage() {
@@ -32,17 +34,10 @@ export default async function UsersPage() {
     );
   }
 
-  // Get all users with their library info
-  const { data: users } = await adminClient
-    .from("profiles")
-    .select("*, libraries(name)")
-    .order("created_at", { ascending: false });
-
-  // Get all libraries for the dropdown
-  const { data: libraries } = await adminClient
-    .from("libraries")
-    .select("*")
-    .order("name");
+  const [users, libraries] = await Promise.all([
+    getAllUsers(),
+    getLibraries(),
+  ]);
 
   return (
     <UsersClient initialUsers={users || []} allLibraries={libraries || []} />
