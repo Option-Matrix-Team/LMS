@@ -45,8 +45,9 @@ export function PoliciesClient({
         extension_duration_days: policy.extension_duration_days,
       });
       toast.success("Borrowing policy updated successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update policy");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to update policy";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

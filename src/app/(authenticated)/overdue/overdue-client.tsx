@@ -32,8 +32,9 @@ export function OverdueClient({ initialBorrowings }: OverdueClientProps) {
       await returnBook(borrowingId);
       setBorrowings(borrowings.filter((b) => b.id !== borrowingId));
       toast.success("Book returned successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to return book");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to return book";
+      toast.error(message);
     } finally {
       setLoadingId(null);
     }
@@ -45,8 +46,9 @@ export function OverdueClient({ initialBorrowings }: OverdueClientProps) {
       await extendBorrowing(borrowingId);
       toast.success("Borrowing extended successfully");
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to extend borrowing");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to extend borrowing";
+      toast.error(message);
     } finally {
       setLoadingId(null);
     }

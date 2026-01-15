@@ -71,8 +71,9 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
       toast.success("User updated successfully");
       setEditingUser(null);
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update user");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to update user";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -101,8 +102,9 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
       setNewUserRole("librarian");
       setNewUserLibraryId("");
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create user");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create user";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -120,8 +122,9 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
       await deleteUser(userId);
       toast.success("User deleted successfully");
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete user");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to delete user";
+      toast.error(message);
     }
   };
 
@@ -137,8 +140,9 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
       await removeUserFromLibrary(userId);
       toast.success("User removed from library");
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to remove user");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to remove user";
+      toast.error(message);
     }
   };
 
@@ -286,7 +290,7 @@ export function UsersClient({ initialUsers, allLibraries }: UsersClientProps) {
               <select
                 id="newRole"
                 value={newUserRole}
-                onChange={(e) => setNewUserRole(e.target.value as any)}
+                onChange={(e) => setNewUserRole(e.target.value as "system_operator" | "library_admin" | "librarian")}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
               >
                 <option value="librarian">Librarian</option>

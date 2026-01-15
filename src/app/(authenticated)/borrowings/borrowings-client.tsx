@@ -76,8 +76,9 @@ export function BorrowingsClient({
       setPhone("");
       setMemberSearch("");
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to issue book");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to issue book";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -90,8 +91,9 @@ export function BorrowingsClient({
       await returnBook(borrowingId);
       setBorrowings(borrowings.filter((b) => b.id !== borrowingId));
       toast.success("Book returned successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to return book");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to return book";
+      toast.error(message);
     }
   };
 

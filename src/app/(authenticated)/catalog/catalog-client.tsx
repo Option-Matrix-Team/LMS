@@ -68,7 +68,7 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
       setIsSearching(true);
       try {
         const results = await searchBooks(query);
-        setBooks(results);
+        setBooks(results as Book[]);
       } catch (error) {
         console.error("Search error:", error);
         // Keep current books on error
@@ -152,8 +152,9 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
       setImagePreview(null);
       setSelectedImage(null);
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to add book");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to add book";
+      toast.error(message);
     } finally {
       setIsLoading(false);
       setIsUploading(false);
@@ -172,8 +173,9 @@ export function CatalogClient({ initialBooks }: CatalogClientProps) {
       await deleteBook(id);
       setBooks(books.filter((b) => b.id !== id));
       toast.success("Book deleted");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete book");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to delete book";
+      toast.error(message);
     }
   };
 

@@ -73,9 +73,9 @@ export async function processOverdueReminders() {
 
   // Send reminder for each overdue book
   for (const borrowing of overdueBorrowings || []) {
-    const member = borrowing.members as any;
-    const book = borrowing.books as any;
-    const library = book?.libraries as any;
+    const member = borrowing.members as unknown as { name: string; email: string } | null;
+    const book = borrowing.books as unknown as { name: string; author: string; libraries?: { name: string } | null } | null;
+    const library = book?.libraries;
 
     if (!member?.email) continue;
 
@@ -139,9 +139,9 @@ export async function processDueReminders() {
   console.log(`Found ${dueSoonBorrowings?.length || 0} books due in 24 hours`);
 
   for (const borrowing of dueSoonBorrowings || []) {
-    const member = borrowing.members as any;
-    const book = borrowing.books as any;
-    const library = book?.libraries as any;
+    const member = borrowing.members as unknown as { name: string; email: string } | null;
+    const book = borrowing.books as unknown as { name: string; author: string; libraries?: { name: string } | null } | null;
+    const library = book?.libraries;
 
     if (!member?.email) continue;
 

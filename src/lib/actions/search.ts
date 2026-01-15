@@ -49,7 +49,7 @@ export async function searchBooks(query: string) {
 }
 
 async function fallbackSearch(
-  adminClient: any,
+  adminClient: ReturnType<typeof getSupabaseAdmin>,
   libraryId: string,
   query: string,
 ) {
